@@ -84,17 +84,19 @@ Public Class Mammal
 End Class  
 ```  
   
-```csharp  
-// Applies the ClassInterfaceAttribute to set the interface to dual.  
-[ClassInterface(ClassInterfaceType.AutoDual)]  
-// Implicitly extends System.Object.  
-public class Mammal  
-{  
-    void  Eat();  
-    void  Breathe():  
-    void  Sleep();  
-}  
-```  
+```csharp
+// Applies the ClassInterfaceAttribute to set the interface to dual.
+[ClassInterface(ClassInterfaceType.AutoDual)]
+// Implicitly extends System.Object.
+public class Mammal
+{
+    public Mammal() {}
+
+    public void Eat() {}
+    public void Breathe() {}
+    public void Sleep() {}
+}
+```
   
  Клиент COM может получить указатель на интерфейс класса с именем `_Mammal`, который описан в библиотеке типов, созданной [программой экспорта библиотек типов (Tlbexp.exe)](../tools/tlbexp-exe-type-library-exporter.md). Если класс `Mammal` реализовал один или несколько интерфейсов, они будут отображены в коклассе.  
   
@@ -139,12 +141,17 @@ coclass Mammal
 End Class  
 ```  
   
-```csharp  
-[ClassInterface(ClassInterfaceType.None)]  
-public class LoanApp : IExplicit {  
-    void M();  
-}  
-```  
+```csharp
+// The CLR does not expose a class interface for this type.
+// COM clients can call the members of this class using the methods from the IExplicit interface.
+[ClassInterface(ClassInterfaceType.None)]
+public class LoanApp : IExplicit
+{
+    public LoanApp() {}
+
+    Int32 IExplicit.M() { return 0; }
+}
+```
   
  Значение **ClassInterfaceType.None** предотвращает создание интерфейса класса при экспорте метаданных класса в библиотеку типов. В предыдущем примере клиенты COM могут получить доступ к классу `LoanApp` только через интерфейс `IExplicit`.  
   
@@ -163,12 +170,17 @@ public class LoanApp : IExplicit {
 End Class  
 ```  
   
-```csharp  
-[ClassInterface(ClassInterfaceType.AutoDispatch]  
-public class LoanApp : IAnother {  
-    void M();  
-}  
-```  
+```csharp
+// Have the CLR expose a class interface (derived from IDispatch) for this type.
+// COM clients can call the members of this class using the Invoke method from the IDispatch interface.
+[ClassInterface(ClassInterfaceType.AutoDispatch)]
+public class LoanApp
+{
+    public LoanApp() {}
+
+    public Int32 M() { return 0; }
+}
+```
   
  Чтобы получить идентификатор DispId члена интерфейса во время выполнения, клиент COM может вызвать метод **IDispatch.GetIdsOfNames**. Чтобы вызвать метод для интерфейса, передайте возвращенный идентификатор DispId в качестве аргумента для **IDispatch.Invoke**.  
   
